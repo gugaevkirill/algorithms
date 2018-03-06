@@ -23,3 +23,20 @@ class Analytical:
         # TODO: where is the error ??
         
         return math.floor(inaccurate)
+
+
+class Recursion:
+    def __init__(self, d: int):
+        self.d = d
+    
+    @staticmethod
+    def _one_spiral(self, k: int, d: int):
+        """
+        :param k: turn number
+        :param d: current edge length
+        """
+        
+        return self._one_spiral(d)
+    
+    def solve(self):
+        return self._one_spiral(self.d)
