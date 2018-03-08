@@ -21,29 +21,29 @@ Constraints
 - n will be between 1 and 10000000 inclusive.
 Examples
 0)
-{"a","b","c","d"}
+{'a','b','c','d'}
 2
-Returns: "a"
+Returns: 'a'
 We start counting from a. So a is 1, b is 2. We remove b, so list is now {a,c,d}. We continue from c. So c is 1, d is 2. We remove d, so list is now {a,c}. We continue from a. So a is 1, c is 2. We remove c, and now we are left with the last task a.
 1)
-{"a","b","c","d","e"}
+{'a','b','c','d','e'}
 3
-Returns: "d"
+Returns: 'd'
 We start counting from a. So a is 1, b is 2, c is 3. We remove c, now list = {a,b,d,e}. We continue from d. So d is 1, e is 2, a is 3. We remove a, now list = {b,d,e}. We continue from b. So b is 1, d is 2, e is 3. We remove e, now list = {b,d}. We continue from b. So b is 1, d is 2 and finally b is 3. We remove b, and now we are left with just one task d.
 2)
-{"alpha","beta","gamma","delta","epsilon"}
+{'alpha','beta','gamma','delta','epsilon'}
 1
-Returns: "epsilon"
+Returns: 'epsilon'
 3)
-{"a","b"}
+{'a','b'}
 1000
-Returns: "a"
+Returns: 'a'
 4)
-{"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t", "u","v","w","x","y","z"}
+{'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t', 'u','v','w','x','y','z'}
 17
-Returns: "n"
+Returns: 'n'
 5)
-{"zlqamum","yjsrpybmq","tjllfea","fxjqzznvg","nvhekxr","am","skmazcey","piklp", "olcqvhg","dnpo","bhcfc","y","h","fj","bjeoaxglt","oafduixsz","kmtbaxu", "qgcxjbfx","my","mlhy","bt","bo","q"}
+{'zlqamum','yjsrpybmq','tjllfea','fxjqzznvg','nvhekxr','am','skmazcey','piklp', 'olcqvhg','dnpo','bhcfc','y','h','fj','bjeoaxglt','oafduixsz','kmtbaxu', 'qgcxjbfx','my','mlhy','bt','bo','q'}
 9000000
-Returns: "fxjqzznvg"
+Returns: 'fxjqzznvg'
 This problem statement is the exclusive and proprietary property of TopCoder, Inc. Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited. (c)2003, TopCoder, Inc. All rights reserved.
