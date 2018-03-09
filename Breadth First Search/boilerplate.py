@@ -3,32 +3,49 @@ from collections import deque
 
 
 class ClassName:
-    def method_name(self, start, constr):
+    def method_name(self, start, finish, constr):
+        print(start)
+        max_depth = 0
         start_time = time.time()
     
         # Queue for BFS
-        queue = deque([start])
+        queue = deque([(start, 0)])
     
         # Already visited words (vertexes)
         processed = {start}
     
         # Recursively process every vertex in graph
+        ans = -1
         while queue:
-            current = queue.popleft()
+            current, steps = queue.popleft()
         
-            # TODO: process current vertex
+            # Print progress
+            if max_depth < steps:
+                max_depth = steps
+                print(max_depth, end=' ', flush=True)
         
             for next in self._get_next(current):
                 if next in constr:
                     continue
                 
-                queue.append(next)
+                if next == finish:
+                    ans = steps + 1
+                    break
+                
+                # TODO: process next vertex
+                
+                queue.append((next, steps + 1))
             
                 # To prevent multiple processing of same words
                 processed.add(next)
+            
+            if ans != -1:
+                break
     
         eval_time = round(time.time() - start_time, 4)
-        print(f'\n{eval_time} sec')
+        print(f'\n{eval_time} sec', end='\n\n\n')
+        
+        return ans
 
     def _get_next(self, vertex):
         # TODO: implement this
