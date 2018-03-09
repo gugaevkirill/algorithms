@@ -15,7 +15,7 @@ class CaptureThemAll:
         # Queue for BFS
         queue = deque([(knight, 0, 0b00)])
     
-        # Already visited words (vertexes)
+        # Already visited vertexes
         processed = {(knight, 0b00)}
     
         # Recursively process every vertex in graph
@@ -41,7 +41,7 @@ class CaptureThemAll:
             
                 queue.append((new_coords, steps + 1, will_catch))
             
-                # To prevent multiple processing of same words
+                # To prevent multiple processing of same vertex
                 processed.add((coords, will_catch))
                 
             if ans != -1:

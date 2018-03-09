@@ -11,7 +11,7 @@ class ClassName:
         # Queue for BFS
         queue = deque([(start, 0)])
     
-        # Already visited words (vertexes)
+        # Already visited vertexes
         processed = {start}
     
         # Recursively process every vertex in graph
@@ -36,7 +36,7 @@ class ClassName:
                 
                 queue.append((next, steps + 1))
             
-                # To prevent multiple processing of same words
+                # To prevent multiple processing of same vertex
                 processed.add(next)
             
             if ans != -1:
