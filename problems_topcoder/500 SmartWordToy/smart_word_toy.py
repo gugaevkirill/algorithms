@@ -1,6 +1,7 @@
+# -*- coding: utf-8 -*-
 import time
 from itertools import product
-from queue import Queue, Empty
+from collections import deque
 
 
 class SmartWordToy:
@@ -19,53 +20,53 @@ class SmartWordToy:
         max_depth = 0
         start_time = time.time()
         
-        # Already visited words (vertexes)
-        processed = set()
         # Queue for BFS
-        queue = Queue()
-        # Set of disallowed vertexes
-        constraints = self.expand_constraints(constraints_raw)
-        
         # Put first elements in queue. We need 0 steps to reach start point.
-        queue.put((start, 0))
+        queue = deque([(start, 0)])
         
+        # Set of disallowed vertexes
+        constr = self._expand_constraints(constraints_raw)
+        
+        # If finish is prevented
+        if finish in constr:
+            return -1
+        
+        # Already visited words (vertexes)
+        processed = {start}
+
         ans = -1
-        try:
-            # Recursively process every vertex in graph
-            while True:
-                vertex = queue.get(False)  # Non-blocking get
-                word = vertex[0]
-                count = vertex[1] + 1
+        # Recursively process every vertex in graph
+        while queue:
+            word, count = queue.popleft()
+            count += 1
+            
+            # Print progress
+            if count > max_depth:
+                max_depth = count
+                print(max_depth, end=' ', flush=True)
+            
+            for next_word in self._get_next_words(word):
+                if next_word in constr or next_word in processed:
+                    continue
                 
-                # Print progress
-                if count > max_depth:
-                    max_depth = count
-                    print(max_depth, end=' ', flush=True)
-                
-                for next_word in self.get_next_words(word):
-                    if next_word in processed or next_word in constraints:
-                        continue
-                    
-                    if next_word == finish:
-                        ans = count
-                        break
-                    
-                    queue.put((next_word, count))
-                    
-                # To prevent multiple processing of same words
-                processed.add(word)
-                
-                if ans != -1:
+                if next_word == finish:
+                    ans = count
                     break
-        except Empty:
-            pass
+                
+                queue.append((next_word, count))
+
+                # To prevent multiple processing of same words
+                processed.add(next_word)
+            
+            if ans != -1:
+                break
 
         eval_time = round(time.time() - start_time, 4)
         print(f'\n{eval_time} sec')
         
         return ans
 
-    def expand_constraints(self, constr_tuple):
+    def _expand_constraints(self, constr_tuple):
         """
         Returns set with all constraint words
 
@@ -79,31 +80,29 @@ class SmartWordToy:
             for chars_tuple in product(*constr_string.split())
         }
     
-    def get_next_words(self, current_word):
-        for i in range(4):
-            letter = current_word[i]
+    def _get_next_words(self, current_word):
+        for i,letter in enumerate(current_word):
+            letter_next = chr(ord(letter) + 1)
+            letter_prev = chr(ord(letter) - 1)
+            
             if letter == 'a':
-                letter_next = 'b'
                 letter_prev = 'z'
             elif letter == 'z':
                 letter_next = 'a'
-                letter_prev = 'y'
-            else:
-                letter_next = chr(ord(letter) + 1)
-                letter_prev = chr(ord(letter) - 1)
             
-            yield current_word[0:i] + letter_next + current_word[i + 1: 4]
-            yield current_word[0:i] + letter_prev + current_word[i + 1: 4]
+            yield current_word[:i] + letter_next + current_word[i + 1:]
+            yield current_word[:i] + letter_prev + current_word[i + 1:]
+    
 
 
 toy = SmartWordToy()
 
 # Methods tests:
-assert {'late', 'fate', 'lace', 'face'} == toy.expand_constraints(('lf a tc e', ))
-assert {'qwer', 'ardf', 'aldf'} == toy.expand_constraints(('q w e r', 'a rl d f'))
+assert {'late', 'fate', 'lace', 'face'} == set(toy._expand_constraints(('lf a tc e',)))
+assert {'qwer', 'ardf', 'aldf'} == set(toy._expand_constraints(('q w e r', 'a rl d f')))
 
-assert {'baaa', 'zaaa', 'abaa', 'azaa', 'aaba', 'aaza', 'aaab', 'aaaz'} == set(toy.get_next_words('aaaa'))
-assert {'rwer', 'pwer', 'qver', 'qxer', 'qwdr', 'qwfr', 'qweq', 'qwes'} == set(toy.get_next_words('qwer'))
+assert {'baaa', 'zaaa', 'abaa', 'azaa', 'aaba', 'aaza', 'aaab', 'aaaz'} == set(toy._get_next_words('aaaa'))
+assert {'rwer', 'pwer', 'qver', 'qxer', 'qwdr', 'qwfr', 'qweq', 'qwes'} == set(toy._get_next_words('qwer'))
 
 # Solution checks:
 assert 8 == toy.minPresses(
@@ -128,7 +127,7 @@ assert 6 == toy.minPresses(
      'a a a cdefghijklmnopqrstuvwxyz')
 )
 
-assert -1 == toy.minPresses('aaaa', 'bbbb', ('b b b b'))
+assert -1 == toy.minPresses('aaaa', 'bbbb', ('b b b b',))
 
 assert -1 == toy.minPresses(
     'zzzz',
