@@ -4,17 +4,17 @@ import time
 class BridgeCrossing:
     def __init__(self):
         self._times = []
-        
+
     def minTime(self, times):
         print(times)
         start_time = time.time()
-        
+
         self._times = times
         ans = self._solve(tuple(i for i in range(len(times))), tuple())
-    
+
         eval_time = round(time.time() - start_time, 4)
         print(f'{eval_time} sec', end='\n\n\n')
-        
+
         return ans
 
     def _solve(self, left_initial, right_initial):
@@ -33,22 +33,22 @@ class BridgeCrossing:
             for j in left_initial:
                 if i >= j:
                     continue
-                
+
                 right = set(right_initial)
                 left = set(left_initial)
-                
+
                 right.add(i)
                 right.add(j)
                 left.remove(i)
                 left.remove(j)
-                
+
                 fastest = self._find_fastest(right)
                 right.remove(fastest)
                 left.add(fastest)
-                
+
                 time_to_cross = max(self._times[i], self._times[j]) + self._times[fastest]
                 total_time = time_to_cross + self._solve(tuple(left), tuple(right))
-                
+
                 if total_time < min_time:
                     min_time = total_time
 
@@ -78,8 +78,8 @@ assert 17 == crossing.minTime((1, 2, 5, 10))
 
 # One solution is: 1 and 2 cross together (2min), 1 goes back (1min), 4 and 5 cross together (5min), 2 goes back (2min), 1 and 3 cross together (3min), 1 goes back (1min), 1 and 2 cross together (2min). This yields a total of 2 + 1 + 5 + 2 + 3 + 1 + 2 = 16 minutes spent.
 assert 16 == crossing.minTime((1, 2, 3, 4, 5))
-#
-# # Only one person crosses the bridge once.
+
+# Only one person crosses the bridge once.
 assert 100 == crossing.minTime((100,))
-#
+
 assert 162 == crossing.minTime((1, 2, 3, 50, 99, 100))
