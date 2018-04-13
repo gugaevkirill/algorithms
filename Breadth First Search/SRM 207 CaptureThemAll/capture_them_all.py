@@ -4,6 +4,27 @@ from collections import deque
 
 class CaptureThemAll:
     def fastKnight(self, knight_str, rook_str, queen_str):
+        """
+        # From "a1", the knight can move directly to "b3" and capture the rook. From there, the knight can move directly to "c5" and capture the queen.
+        >>> game = CaptureThemAll()
+        >>> game.fastKnight("a1", "b3", "c5")
+        2
+        
+        # The rook and the queen are both 1 move away from the knight. Once the knight captures one of them (it doesn't matter which one), it can return to its starting location, and capture the other piece in one more move.
+        >>> game.fastKnight("b1", "c3", "a3")
+        3
+        
+        # The rook and the queen are close, but it takes 6 moves to capture them.
+        >>> game.fastKnight("a1", "a2", "b2")
+        6
+        
+        >>> game.fastKnight("a5", "b7", "e4")
+        3
+        
+        # This problem statement is the exclusive and proprietary property of TopCoder, Inc. Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited. (c)2003, TopCoder, Inc. All rights reserved.
+        >>> game.fastKnight("h8", "e2", "d2")
+        6
+        """
         print(knight_str, rook_str, queen_str)
         max_depth = 0
         start_time = time.time()
@@ -53,6 +74,14 @@ class CaptureThemAll:
         return ans
 
     def _get_next(self, x, y):
+        """
+        >>> game = CaptureThemAll()
+        >>> list(game._get_next(0, 0))
+        [(1, 2), (2, 1)]
+        
+        >>> list(game._get_next(3, 4))
+        [(4, 6), (4, 2), (2, 6), (2, 2), (5, 5), (5, 3), (1, 5), (1, 3)]
+        """
         for multiplier in ((1, 2), (2, 1)):
             for x_dir in (1, -1):
                 for y_dir in (1, -1):
@@ -66,33 +95,17 @@ class CaptureThemAll:
             
     def _get_int_coords(self, str_coords):
         """
-        'e5' -> 5, 5
+        >>> game = CaptureThemAll()
+        >>> game._get_int_coords('a5')
+        1, 5
+        
+        >>> game._get_int_coords('e4')
+        5, 4
         """
 
         return ord(str_coords[0]) - ord('a') + 1, int(str_coords[1])
 
 
-game = CaptureThemAll()
-
-# Methods tests:
-assert 1, 5 == game._get_int_coords('a5')
-assert 5, 4 == game._get_int_coords('e4')
-
-assert {(2, 1), (1, 2)} == set(game._get_next(0, 0))
-assert {(4, 6), (4, 2), (5, 5), (5, 3), (2, 6), (2, 2), (1, 5), (1, 3)} == set(game._get_next(3, 4))
-
-# Solution checks:
-# From "a1", the knight can move directly to "b3" and capture the rook. From there, the knight can move directly to "c5" and capture the queen.
-assert 2 == game.fastKnight("a1", "b3", "c5")
-
-# The rook and the queen are both 1 move away from the knight. Once the knight captures one of them (it doesn't matter which one), it can return to its starting location, and capture the other piece in one more move.
-a = game.fastKnight("b1", "c3", "a3")
-assert 3 == game.fastKnight("b1", "c3", "a3")
-
-# The rook and the queen are close, but it takes 6 moves to capture them.
-assert 6 == game.fastKnight("a1", "a2", "b2")
-
-assert 3 == game.fastKnight("a5", "b7", "e4")
-
-# This problem statement is the exclusive and proprietary property of TopCoder, Inc. Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited. (c)2003, TopCoder, Inc. All rights reserved.
-assert 6 == game.fastKnight("h8", "e2", "d2")
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
