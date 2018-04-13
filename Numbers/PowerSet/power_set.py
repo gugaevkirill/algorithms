@@ -2,9 +2,9 @@ from typing import Set
 from collections import defaultdict, OrderedDict
 
 
-def power_set_ranger(input) -> Set[str]:
+def power_set_ranger(target: str) -> Set[str]:
     letter_counts = defaultdict(int)
-    for l in input:
+    for l in target:
         letter_counts[l] += 1
     
     letter_counts_sorted = OrderedDict(sorted(letter_counts.items()))
