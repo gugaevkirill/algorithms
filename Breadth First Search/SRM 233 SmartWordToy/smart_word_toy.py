@@ -25,7 +25,7 @@ class SmartWordToy:
         queue = deque([(start, 0)])
         
         # Set of disallowed vertexes
-        constr = self._expand_constraints(constraints_raw)
+        constr = set(self._expand_constraints(constraints_raw))
         
         # If finish is prevented
         if finish in constr:
@@ -66,21 +66,35 @@ class SmartWordToy:
         
         return ans
 
-    def _expand_constraints(self, constr_tuple):
+    @staticmethod
+    def _expand_constraints(constr_tuple):
         """
         Returns set with all constraint words
+
+        >>> list(SmartWordToy._expand_constraints(('lf a tc e',)))
+        ['late', 'lace', 'fate', 'face']
+        
+        >>> list(SmartWordToy._expand_constraints(('q w e r', 'a rl d f')))
+        ['qwer', 'ardf', 'aldf']
 
         :param constr_tuple:  Tuple[str]
         :return:  Set[str]
         """
         
-        return {
+        return (
             ''.join(chars_tuple)
             for constr_string in constr_tuple
             for chars_tuple in product(*constr_string.split())
-        }
+        )
     
     def _get_next_words(self, current_word):
+        """
+        >>> list(toy._get_next_words('aaaa'))
+        ['baaa', 'zaaa', 'abaa', 'azaa', 'aaba', 'aaza', 'aaab', 'aaaz']
+        
+        >>> list(toy._get_next_words('qwer'))
+        ['rwer', 'pwer', 'qxer', 'qver', 'qwfr', 'qwdr', 'qwes', 'qweq']
+        """
         for i,letter in enumerate(current_word):
             letter_next = chr(ord(letter) + 1)
             letter_prev = chr(ord(letter) - 1)
@@ -94,67 +108,64 @@ class SmartWordToy:
             yield current_word[:i] + letter_prev + current_word[i + 1:]
     
 
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
 
-toy = SmartWordToy()
 
-# Methods tests:
-assert {'late', 'fate', 'lace', 'face'} == set(toy._expand_constraints(('lf a tc e',)))
-assert {'qwer', 'ardf', 'aldf'} == set(toy._expand_constraints(('q w e r', 'a rl d f')))
-
-assert {'baaa', 'zaaa', 'abaa', 'azaa', 'aaba', 'aaza', 'aaab', 'aaaz'} == set(toy._get_next_words('aaaa'))
-assert {'rwer', 'pwer', 'qver', 'qxer', 'qwdr', 'qwfr', 'qweq', 'qwes'} == set(toy._get_next_words('qwer'))
-
-# Solution checks:
-assert 8 == toy.minPresses(
-    'aaaa',
-    'zzzz',
-    ('a a a z', 'a a z a', 'a z a a', 'z a a a', 'a z z z', 'z a z z', 'z z a z', 'z z z a')
-)
-
-# Simply change each letter one by one to the following letter in the alphabet.
-assert 4 == toy.minPresses('aaaa', 'bbbb', ())
-
-# Just as in the previous example, we have no forbidden words. Simply apply the correct number of button presses for each letter and you're there.
-assert 50 == toy.minPresses('aaaa', 'mmnn', ())
-
-# Here is an example where it is impossible to go to any word from 'aaaa'.
-assert -1 == toy.minPresses('aaaa', 'zzzz', ('bz a a a', 'a bz a a', 'a a bz a', 'a a a bz'))
-
-assert 6 == toy.minPresses(
-    'aaaa',
-    'zzzz',
-    ('cdefghijklmnopqrstuvwxyz a a a', 'a cdefghijklmnopqrstuvwxyz a a', 'a a cdefghijklmnopqrstuvwxyz a',
-     'a a a cdefghijklmnopqrstuvwxyz')
-)
-
-assert -1 == toy.minPresses('aaaa', 'bbbb', ('b b b b',))
-
-assert -1 == toy.minPresses(
-    'zzzz',
-    'aaaa',
-    ('abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
-     'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
-     'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
-     'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
-     'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
-     'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
-     'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
-     'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
-     'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
-     'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
-     'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
-     'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
-     'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
-     'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
-     'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
-     'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
-     'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
-     'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
-     'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
-     'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
-     'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
-     'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
-     'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
-     'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
-     'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk')
-)
+    toy = SmartWordToy()
+    
+    # Solution checks:
+    assert 8 == toy.minPresses(
+        'aaaa',
+        'zzzz',
+        ('a a a z', 'a a z a', 'a z a a', 'z a a a', 'a z z z', 'z a z z', 'z z a z', 'z z z a')
+    )
+    
+    # Simply change each letter one by one to the following letter in the alphabet.
+    assert 4 == toy.minPresses('aaaa', 'bbbb', ())
+    
+    # Just as in the previous example, we have no forbidden words. Simply apply the correct number of button presses for each letter and you're there.
+    assert 50 == toy.minPresses('aaaa', 'mmnn', ())
+    
+    # Here is an example where it is impossible to go to any word from 'aaaa'.
+    assert -1 == toy.minPresses('aaaa', 'zzzz', ('bz a a a', 'a bz a a', 'a a bz a', 'a a a bz'))
+    
+    assert 6 == toy.minPresses(
+        'aaaa',
+        'zzzz',
+        ('cdefghijklmnopqrstuvwxyz a a a', 'a cdefghijklmnopqrstuvwxyz a a', 'a a cdefghijklmnopqrstuvwxyz a',
+         'a a a cdefghijklmnopqrstuvwxyz')
+    )
+    
+    assert -1 == toy.minPresses('aaaa', 'bbbb', ('b b b b',))
+    
+    assert -1 == toy.minPresses(
+        'zzzz',
+        'aaaa',
+        ('abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
+         'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
+         'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
+         'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
+         'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
+         'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
+         'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
+         'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
+         'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
+         'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
+         'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
+         'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
+         'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
+         'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
+         'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
+         'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
+         'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
+         'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
+         'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
+         'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
+         'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
+         'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
+         'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
+         'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk',
+         'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk', 'abcdefghijkl abcdefghijkl abcdefghijkl abcdefghijk')
+    )
