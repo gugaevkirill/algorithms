@@ -6,6 +6,25 @@ class BridgeCrossing:
         self._times = []
 
     def minTime(self, times):
+        """
+        # The example from the text.
+        >>> crossing = BridgeCrossing()
+        >>> crossing.minTime((1, 2, 5, 10))
+        17
+        
+        # One solution is: 1 and 2 cross together (2min), 1 goes back (1min), 4 and 5 cross together (5min),
+        # 2 goes back (2min), 1 and 3 cross together (3min), 1 goes back (1min), 1 and 2 cross together (2min).
+        # This yields a total of 2 + 1 + 5 + 2 + 3 + 1 + 2 = 16 minutes spent.
+        >>> crossing.minTime((1, 2, 3, 4, 5))
+        16
+        
+        # Only one person crosses the bridge once.
+        >>> crossing.minTime((100,))
+        100
+        
+        >>> crossing.minTime((1, 2, 3, 50, 99, 100))
+        162
+        """
         print(times)
         start_time = time.time()
 
@@ -19,6 +38,14 @@ class BridgeCrossing:
 
     def _solve(self, left_initial, right_initial):
         """
+        >>> crossing = BridgeCrossing()
+        >>> crossing._times = (1, 2, 5, 10)
+        >>> crossing._solve((0, 1), (2, 3))
+        2
+        
+        >>> crossing._solve((0, 1, 2), (3,))
+        8
+
         :param set left:
         :param set right:
         :return int:
@@ -65,21 +92,6 @@ class BridgeCrossing:
         return min_index
 
 
-crossing = BridgeCrossing()
-
-# Methods tests:
-crossing._times = (1, 2, 5, 10)
-assert 2 == crossing._solve((0, 1), (2, 3))
-assert 8 == crossing._solve((0, 1, 2), (3,))
-
-# Solution checks:
-# The example from the text.
-assert 17 == crossing.minTime((1, 2, 5, 10))
-
-# One solution is: 1 and 2 cross together (2min), 1 goes back (1min), 4 and 5 cross together (5min), 2 goes back (2min), 1 and 3 cross together (3min), 1 goes back (1min), 1 and 2 cross together (2min). This yields a total of 2 + 1 + 5 + 2 + 3 + 1 + 2 = 16 minutes spent.
-assert 16 == crossing.minTime((1, 2, 3, 4, 5))
-
-# Only one person crosses the bridge once.
-assert 100 == crossing.minTime((100,))
-
-assert 162 == crossing.minTime((1, 2, 3, 50, 99, 100))
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
