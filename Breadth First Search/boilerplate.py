@@ -47,16 +47,22 @@ class ClassName:
         
         return ans
 
-    def _get_next(self, vertex):
+    @staticmethod
+    def _get_next(vertex):
+        """
+        TODO: implement your tests
+        >>> ClassName._get_next(1)
+        1
+        """
         # TODO: implement this
         return []
 
 
-obj = ClassName()
-
-# Methods tests:
-# TODO: add your tests
-assert [] == obj._get_next(1)
-
-# Solution checks:
-# TODO: add tests from examples
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
+    
+    obj = ClassName()
+    
+    # Solution checks:
+    # TODO: add tests from examples
