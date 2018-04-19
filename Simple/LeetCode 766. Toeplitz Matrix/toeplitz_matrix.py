@@ -6,12 +6,11 @@ class Solution:
         :rtype: bool
         
         # Example 1
-        >>> solver = Solution()
-        >>> solver.isToeplitzMatrix([[1,2,3,4],[5,1,2,3],[9,5,1,2]])
+        >>> Solution().isToeplitzMatrix([[1,2,3,4],[5,1,2,3],[9,5,1,2]])
         True
         
         # Example 2
-        >>> solver.isToeplitzMatrix([[1,2],[2,2]])
+        >>> Solution().isToeplitzMatrix([[1,2],[2,2]])
         False
         """
         

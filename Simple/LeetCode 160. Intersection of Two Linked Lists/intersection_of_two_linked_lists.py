@@ -11,13 +11,12 @@ class Solution(object):
         """
         :type head1, head1: ListNode
         :rtype: ListNode
-        
-        >>> solver = Solution()
-        >>> solver.getIntersectionNode(None, None) is None
+
+        >>> Solution().getIntersectionNode(None, None) is None
         True
         
         >>> node = ListNode(1)
-        >>> solver.getIntersectionNode(node, node) is None
+        >>> Solution().getIntersectionNode(node, node) is None
         False
         """
         
