@@ -1,4 +1,4 @@
 # Algorithms
 
-This repo includes realisations of some TopCoder problems
-along with other interesting algorithms.
+This repo includes realisations of some TopCoder, LeetCode & other
+problems along with other interesting algorithms.
